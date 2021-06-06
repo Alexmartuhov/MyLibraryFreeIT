@@ -4,6 +4,7 @@ import dao.entity.Author;
 import dao.entity.Book;
 import dao.entity.Genre;
 import dao.impl.AuthorDaoImpl;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ public class Menu {
         AuthorDaoImpl authorDao = new AuthorDaoImpl();
         Scanner sc = new Scanner(System.in);
         Scanner scString = new Scanner(System.in);
+        Author author;
         System.out.println("Введите ID книги:");
         int id = sc.nextInt();
         System.out.println("Введите название книги:");
@@ -38,10 +40,21 @@ public class Menu {
         System.out.println("Введите один из жанров: " + Arrays.toString(Genre.values()));
         String genreString = scString.nextLine();
         Genre genre = Genre.valueOf(genreString);
-        System.out.println("Введите Id автора:");
+        authorDao.getAuthorList();
+        System.out.println("Введите Id автора (чтобы добавить нового автора введите 0):");
         int authorId = sc.nextInt();
-        Author author = authorDao.getAuthor(authorId);
-        System.out.println("");
+        if (authorId == 0) {
+            System.out.println("Введите ID автора:");
+            authorId = sc.nextInt();
+            System.out.println("Введите имя автора:");
+            String firstName = scString.nextLine();
+            System.out.println("Введите фамилию автора:");
+            String secondName = scString.nextLine();
+            author = new Author(authorId, firstName, secondName);
+            authorDao.addAuthor(author);
+        } else {
+            author = authorDao.getAuthor(authorId);
+        }
         Book book = new Book(id, title, genre, LocalDate.now(), author);
         return book;
     }

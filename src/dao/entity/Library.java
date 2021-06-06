@@ -1,14 +1,21 @@
 package dao.entity;
 
+import dao.impl.AuthorDaoImpl;
+import dao.impl.BookDaoImpl;
+
+import java.sql.SQLException;
 import java.util.*;
 
 public class Library {
     public List<Book> bookList = new ArrayList<>();
     public HashSet<Author> authorList = new HashSet<>();
-    private Genre genre;
+    BookDaoImpl bookDao = new BookDaoImpl();
+    AuthorDaoImpl authorDao = new AuthorDaoImpl();
 
+    public Library() throws SQLException {
+    }
 
-    public void addBook(Book book) {
+    public void addBook(Book book) throws SQLException {
         int count = 0;
         for (Book i : bookList) {
             if (book.getId() == i.getId()) {
@@ -18,13 +25,17 @@ public class Library {
         }
         if (count == 0) {
             bookList.add(book);
-            authorList.add(book.getAuthor());
+            bookDao.addBook(book);
+            if (!authorList.contains(book.getAuthor())) {
+                authorList.add(book.getAuthor());
+                authorDao.addAuthor(book.getAuthor());
+            }
         }
     }
 
 
-    public List<Book> getBookList() {
-        return bookList;
+    public List<Book> getBookList() throws SQLException {
+        return bookDao.getBookList();
     }
 
     public HashSet<Author> getAuthorList() {
@@ -41,12 +52,13 @@ public class Library {
         return authorBookList;
     }
 
-    public void deleteBook(int id) {
+    public void deleteBook(int id) throws SQLException {
         Book delete = null;
         for (Book i : bookList) {
             if (i.getId() == id) {
                 delete = i;
                 bookList.remove(i);
+                bookDao.deleteBook(delete);
                 break;
             }
         }
@@ -58,10 +70,11 @@ public class Library {
         }
         if (count == 0) {
             authorList.remove(delete.getAuthor());
+            authorDao.deleteAuthor(delete.getAuthor());
         }
     }
 
-    public void editBook(Book book) {
+    public void editBook(Book book) throws SQLException {
         bookList.remove(book);
         Scanner sc = new Scanner(System.in);
         Scanner sc2 = new Scanner(System.in);
@@ -75,6 +88,6 @@ public class Library {
         String genre = sc.next();
         book.setGenre(Genre.valueOf(genre));
         bookList.add(book);
-
+        bookDao.editBook(book);
     }
 }

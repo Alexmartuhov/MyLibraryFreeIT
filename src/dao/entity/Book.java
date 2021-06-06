@@ -17,6 +17,16 @@ public class Book {
         this.author = author;
     }
 
+    public Book(int id, String title, Genre genre) {
+        this.id = id;
+        this.title = title;
+        this.genre = genre;
+    }
+
+    public Book(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -59,6 +69,6 @@ public class Book {
 
     @Override
     public String toString() {
-        return "ID:" + id + "; Название: " + title + "; Жанр: " + genre + "; Автор: " + author.getSecondName()+" Дата: "+dateCreated;
+        return "ID:" + id + "; Название: " + title + "; Жанр: " + genre + "; Автор: " + author.getSecondName() + " Дата: " + dateCreated;
     }
 }

@@ -5,10 +5,10 @@ public class Author {
     private String firstName;
     private String secondName;
 
-    public Author(int id, String firstName, String secondName){
-        this.id=id;
-        this.firstName=firstName;
-        this.secondName=secondName;
+    public Author(int id, String firstName, String secondName) {
+        this.id = id;
+        this.firstName = firstName;
+        this.secondName = secondName;
     }
 
     public int getId() {
@@ -34,6 +34,7 @@ public class Author {
     public void setSecondName(String secondName) {
         this.secondName = secondName;
     }
+
     @Override
     public String toString() {
         return "ID:" + id + "; Имя: " + firstName + "; Фамилия: " + secondName;

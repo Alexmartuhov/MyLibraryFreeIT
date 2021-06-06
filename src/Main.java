@@ -11,7 +11,7 @@ public class Main {
         AuthorDaoImpl authorDao = new AuthorDaoImpl();
         int action;
         do {
-            action=menu.action();
+            action = menu.action();
             switch (action) {
                 case (1):
                     bookDao.getBookList();

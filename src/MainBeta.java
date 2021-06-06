@@ -2,6 +2,7 @@ import dao.entity.Author;
 import dao.entity.Book;
 import dao.entity.Library;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -9,7 +10,7 @@ import static dao.entity.Genre.CLASSIC;
 import static dao.entity.Genre.ROMANCE;
 
 public class MainBeta {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Library library = new Library();
         Author dreiser = new Author(1, "Theodore", "Dreiser");
         Author bronte = new Author(2, "Charlotte", "Bronte");
@@ -27,7 +28,7 @@ public class MainBeta {
         library.addBook(book4);
 
         List<Book> booklist = library.getBookList();
-        Collections.sort(booklist, (o1, o2) -> o1.getTitle().compareTo(o2.getTitle()));
+        booklist.sort((o1, o2) -> o1.getTitle().compareTo(o2.getTitle()));
         for (Book i : booklist) {
             System.out.println(i);
         }
@@ -35,7 +36,7 @@ public class MainBeta {
         library.deleteBook(4);
 
         booklist = library.getBookList();
-        Collections.sort(booklist, (o1, o2) -> o1.getDateCreated().compareTo(o2.getDateCreated()));
+        booklist.sort((o1, o2) -> o1.getDateCreated().compareTo(o2.getDateCreated()));
         for (Book i : booklist) {
             System.out.println(i);
         }

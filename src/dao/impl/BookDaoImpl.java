@@ -1,6 +1,7 @@
 package dao.impl;
 
 import Service.Connector;
+import Service.ConnectorBeta;
 import dao.BookDao;
 import dao.entity.Author;
 import dao.entity.Book;
@@ -8,12 +9,14 @@ import dao.entity.Genre;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookDaoImpl implements BookDao {
 
-    Connection connection= Connector.getConnection();
+    Connection connection = Connector.getConnection();
+//    Connection connection = ConnectorBeta.getConnection();
 
     public BookDaoImpl() throws SQLException {
     }
@@ -45,6 +48,8 @@ public class BookDaoImpl implements BookDao {
             String title = resultSetBook.getString(2);
             String genrestr = resultSetBook.getString(3);
             Genre genre = Genre.valueOf(genrestr);
+            Date date = resultSetBook.getDate(4);
+            LocalDate localDate = date.toLocalDate();
             int authorId = resultSetBook.getInt(5);
             for (Author n : authorList) {
                 if (n.getId() == authorId) {
@@ -52,7 +57,7 @@ public class BookDaoImpl implements BookDao {
                     break;
                 }
             }
-            bookList.add(new Book(id, title, genre, LocalDate.now(), author));
+            bookList.add(new Book(id, title, genre, localDate, author));
             System.out.println(bookList.get(i));
             i++;
         }
@@ -67,7 +72,7 @@ public class BookDaoImpl implements BookDao {
         preparedStatement.setString(2, book.getTitle());
         preparedStatement.setString(3, String.valueOf(book.getGenre()));
         preparedStatement.setDate(4, Date.valueOf(book.getDateCreated()));
-        Author author=book.getAuthor();
+        Author author = book.getAuthor();
         preparedStatement.setObject(5, author.getId());
         int rows = preparedStatement.executeUpdate();
     }
