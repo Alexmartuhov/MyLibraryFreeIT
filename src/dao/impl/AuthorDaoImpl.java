@@ -1,10 +1,9 @@
 package dao.impl;
 
-import Service.Connector;
-import Service.ConnectorBeta;
+import util.Connector;
+import util.ConnectorBeta;
 import dao.AuthorDao;
 import dao.entity.Author;
-import dao.entity.Book;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -50,6 +49,7 @@ public class AuthorDaoImpl implements AuthorDao {
             authorList.add(new Author(id, firstName, secondName));
             if (id == authorId) {
                 author = authorList.get(i);
+                break;
             }
             i++;
         }

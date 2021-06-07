@@ -1,14 +1,13 @@
-package Service;
+package util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
-public class ConnectorBeta {
+public class Connector {
     public static Connection getConnection() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/mylibrarybeta";
+        String url = "jdbc:mysql://localhost:3306/mylibrary";
         String username = "root";
         String password = "3UKtp47k";
         return DriverManager.getConnection(url, username, password);
     }
 }
+

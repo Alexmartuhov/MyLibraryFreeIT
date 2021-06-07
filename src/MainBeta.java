@@ -1,6 +1,7 @@
 import dao.entity.Author;
 import dao.entity.Book;
-import dao.entity.Library;
+import dao.impl.AuthorDaoImpl;
+import dao.impl.BookDaoImpl;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -11,52 +12,51 @@ import static dao.entity.Genre.ROMANCE;
 
 public class MainBeta {
     public static void main(String[] args) throws SQLException {
-        Library library = new Library();
+        BookDaoImpl bookDao = new BookDaoImpl();
+        AuthorDaoImpl authorDao = new AuthorDaoImpl();
         Author dreiser = new Author(1, "Theodore", "Dreiser");
         Author bronte = new Author(2, "Charlotte", "Bronte");
         Book book1 = new Book(1, "Титан", CLASSIC,
                 LocalDate.now(), dreiser);
-        library.addBook(book1);
+        bookDao.addBook(book1);
         Book book2 = new Book(2, "Финансист", CLASSIC,
                 LocalDate.now(), dreiser);
-        library.addBook(book2);
+        bookDao.addBook(book2);
         Book book3 = new Book(3, "Джейн Эйр", ROMANCE,
                 LocalDate.now(), bronte);
-        library.addBook(book3);
+        bookDao.addBook(book3);
         Book book4 = new Book(4, "Стоик", CLASSIC,
                 LocalDate.now(), dreiser);
-        library.addBook(book4);
+        bookDao.addBook(book4);
+        authorDao.addAuthor(dreiser);
+        authorDao.addAuthor(bronte);
 
-        List<Book> booklist = library.getBookList();
+        List<Book> booklist = bookDao.getBookList();
+        System.out.println("=========");
         booklist.sort((o1, o2) -> o1.getTitle().compareTo(o2.getTitle()));
         for (Book i : booklist) {
             System.out.println(i);
         }
         System.out.println("=========");
-        library.deleteBook(4);
+        bookDao.deleteBook(book4);
 
-        booklist = library.getBookList();
+        booklist = bookDao.getBookList();
+        System.out.println("=========");
         booklist.sort((o1, o2) -> o1.getDateCreated().compareTo(o2.getDateCreated()));
         for (Book i : booklist) {
             System.out.println(i);
         }
 
-        library.editBook(book1);
+        Book bookEdit=new Book(1, "Американская трагедия", CLASSIC);
+        bookDao.editBook(bookEdit);
 
         System.out.println("=========");
-        booklist = library.getBookList();
-        for (Book i : booklist) {
-            System.out.println(i);
-        }
+        bookDao.getBookList();
+
         System.out.println("=========");
-        HashSet<Author> authorList = library.getAuthorList();
-        for (Author i : authorList) {
-            System.out.println(i);
-        }
+        authorDao.getAuthorList();
+
         System.out.println("=========");
-        List<Book> authorBookList = library.getAuthorBookList(dreiser);
-        for (Book i : authorBookList) {
-            System.out.println(i);
-        }
+        bookDao.getAuthorBookList(dreiser);
     }
 }

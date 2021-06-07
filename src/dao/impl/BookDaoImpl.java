@@ -1,7 +1,7 @@
 package dao.impl;
 
-import Service.Connector;
-import Service.ConnectorBeta;
+import util.Connector;
+import util.ConnectorBeta;
 import dao.BookDao;
 import dao.entity.Author;
 import dao.entity.Book;
@@ -9,7 +9,6 @@ import dao.entity.Genre;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +22,46 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public List<Book> getBookList() throws SQLException {
+        String sql = "SELECT * FROM authors;";
+        Statement statement = connection.createStatement();
+        ResultSet resultSetAuthor = statement.executeQuery(sql);
+        List<Author> authorList = new ArrayList<>();
+        while (resultSetAuthor.next()) {
+            int id = resultSetAuthor.getInt(1);
+            String firstName = resultSetAuthor.getString(2);
+            String secondName = resultSetAuthor.getString(3);
+            authorList.add(new Author(id, firstName, secondName));
+        }
+
+        String sql2 = "SELECT * FROM library;";
+        ResultSet resultSetBook = statement.executeQuery(sql2);
+        List<Book> bookList = new ArrayList<>();
+        Book book = null;
+        Author author = null;
+        int i = 0;
+        while (resultSetBook.next()) {
+            int id = resultSetBook.getInt(1);
+            String title = resultSetBook.getString(2);
+            String genrestr = resultSetBook.getString(3);
+            Genre genre = Genre.valueOf(genrestr);
+            Date date = resultSetBook.getDate(4);
+            LocalDate localDate = date.toLocalDate();
+            int authorId = resultSetBook.getInt(5);
+            for (Author n : authorList) {
+                if (n.getId() == authorId) {
+                    author = n;
+                    break;
+                }
+            }
+            bookList.add(new Book(id, title, genre, localDate, author));
+            System.out.println(bookList.get(i));
+            i++;
+        }
+        return bookList;
+    }
+
+    @Override
+    public List<Book> getAuthorBookList(Author authorBook) throws SQLException {
         String sql = "SELECT * FROM authors;";
         Statement statement = connection.createStatement();
         ResultSet resultSetAuthor = statement.executeQuery(sql);
@@ -41,7 +80,6 @@ public class BookDaoImpl implements BookDao {
         ResultSet resultSetBook = statement.executeQuery(sql2);
         List<Book> bookList = new ArrayList<>();
         Book book = null;
-        Author author = null;
         i = 0;
         while (resultSetBook.next()) {
             int id = resultSetBook.getInt(1);
@@ -51,15 +89,11 @@ public class BookDaoImpl implements BookDao {
             Date date = resultSetBook.getDate(4);
             LocalDate localDate = date.toLocalDate();
             int authorId = resultSetBook.getInt(5);
-            for (Author n : authorList) {
-                if (n.getId() == authorId) {
-                    author = n;
-                    break;
-                }
+            if (authorId == authorBook.getId()) {
+                bookList.add(new Book(id, title, genre, localDate, authorBook));
+                System.out.println(bookList.get(i));
+                i++;
             }
-            bookList.add(new Book(id, title, genre, localDate, author));
-            System.out.println(bookList.get(i));
-            i++;
         }
         return bookList;
     }
